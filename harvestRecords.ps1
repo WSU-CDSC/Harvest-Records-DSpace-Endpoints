@@ -7,10 +7,10 @@ $dspaceLocal = "your local DSpace URL and OAI request"
 foreach ($ID in $idList) {
 $url = $dspaceLocal + $ID + "&metadataPrefix=xoai"
 [xml]$xml = (New-Object System.Net.WebClient).DownloadString("$url")
-$record = $xml.'OAI-PMH'.GetRecord.InnerXml | %{$_ -replace "\r",""} | %{$_ -replace "\n",""}
+$record = $xml.'OAI-PMH'.GetRecord.InnerXml | %{$_ -replace "\r",""} | %{$_ -replace "\n"," "} | %{$_ -replace "\s+"," "}
 echo "$record" | Out-File -Append $Path
 }
-
+"<records>`r" + (Get-Content $Path | Out-String) + "</records>" | Set-Content $Path
 #Optional
 Write-Host "Press any key to continue ..."
 $x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
